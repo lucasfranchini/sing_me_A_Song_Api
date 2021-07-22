@@ -36,6 +36,16 @@ export async function changeScore(id:number,score:number){
     `,[score,id]);
 }
 
+export async function listRecommendations(comparator:string){
+    const result = await connection.query(`
+    SELECT * 
+    FROM recommendations
+    WHERE score ${comparator} 10
+    ORDER BY score
+    `);
+    return result.rows;
+}
+
 export async function removeRecommendationById(id:number){
     await connection.query(`
     DELETE FROM recommendations

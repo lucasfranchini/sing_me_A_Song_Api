@@ -41,6 +41,12 @@ export async function subtractScore(req:Request,res:Response){
     }  
 }
 
+export async function randomRecommendation(req:Request,res:Response){
+    const result = await recommendationsService.randomRecommendation();
+    if(result===null) return res.sendStatus(404);
+    res.send(result)
+}
+
 function validateYouTubeUrl(url:string)
 {
     const regExp = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;

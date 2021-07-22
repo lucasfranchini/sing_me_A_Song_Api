@@ -21,3 +21,7 @@ export async function changeScore(id:number,type:string):Promise<boolean>{
     }
     return true;
 }
+
+export async function randomRecommendation(){
+    
+}

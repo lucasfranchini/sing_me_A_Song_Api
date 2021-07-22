@@ -9,5 +9,6 @@ app.use(express.json());
 app.post("/recommendations", recommendationsController.addMusic);
 app.post("/recommendations/:id/upvote", recommendationsController.addScore);
 app.post("/recommendations/:id/downvote", recommendationsController.subtractScore);
+app.get("/recommendations/random",recommendationsController.randomRecommendation);
 
 export default app;
