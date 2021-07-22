@@ -15,6 +15,32 @@ export async function addMusic(req:Request,res:Response){
     }
 }
 
+export async function addScore(req:Request,res:Response){
+    try{
+        const id = Number(req.params.id);
+        const result = await recommendationsService.changeScore(id,"up")
+        if(result===null) return res.sendStatus(404);
+        res.sendStatus(200)
+    }
+    catch(e){
+        console.log(e)
+        res.sendStatus(500)
+    }  
+}
+
+export async function subtractScore(req:Request,res:Response){
+    try{
+        const id = Number(req.params.id);
+        const result = await recommendationsService.changeScore(id,"down")
+        if(!result) return res.sendStatus(404);
+        res.sendStatus(200)
+    }
+    catch(e){
+        console.log(e)
+        res.sendStatus(500)
+    }  
+}
+
 function validateYouTubeUrl(url:string)
 {
     const regExp = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;

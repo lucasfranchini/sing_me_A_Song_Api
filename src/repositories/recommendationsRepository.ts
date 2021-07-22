@@ -19,3 +19,12 @@ export async function verifyLinkDuplication(url:string):Promise<boolean>{
     if(result.rowCount>0) return true;
     else return false
 }
+
+export async function findRecommendationById(id:number):Promise<{id:number;name:string;youtubeLink:string;score:number}>{
+    const result = await connection.query(`
+    SELECT * 
+    FROM recommendations
+    WHERE id = $1
+    `,[id]);
+    return result.rows[0];
+}

@@ -6,3 +6,15 @@ export async function addMusic(name:string,link:string):Promise<boolean>{
     await recommendationsRepository.addMusic(name,link);
     return true;
 }
+
+export async function changeScore(id:number,type:string):Promise<boolean>{
+    const recommendation = await recommendationsRepository.findRecommendationById(id)
+    if(!recommendation) return false;
+    if(type==='up'){
+
+    }
+    else if(type==='down'){
+
+    }
+    return true;
+}
