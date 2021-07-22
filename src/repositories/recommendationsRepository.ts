@@ -36,12 +36,20 @@ export async function changeScore(id:number,score:number){
     `,[score,id]);
 }
 
-export async function listRecommendations(comparator:string){
+export async function listRecommendationsByScore(comparator:string):Promise<{id:number;name:string;youtubeLink:string;score:number}[]>{
     const result = await connection.query(`
     SELECT * 
     FROM recommendations
     WHERE score ${comparator} 10
     ORDER BY score
+    `);
+    return result.rows;
+}
+
+export async function listAllRecommendations():Promise<{id:number;name:string;youtubeLink:string;score:number}[]>{
+    const result = await connection.query(`
+    SELECT * 
+    FROM recommendations
     `);
     return result.rows;
 }

@@ -23,5 +23,14 @@ export async function changeScore(id:number,type:string):Promise<boolean>{
 }
 
 export async function randomRecommendation(){
-    
+    let result:{id:number;name:string;youtubeLink:string;score:number}[];
+
+    if(Math.random() < 0.7) result = await recommendationsRepository.listRecommendationsByScore('>');
+    else result = await recommendationsRepository.listRecommendationsByScore('<');
+
+    if(result.length===0) result = await recommendationsRepository.listAllRecommendations();
+    if(result.length===0) return null;
+
+    const random = Math.floor(Math.random()*result.length);
+    return result[random];
 }
