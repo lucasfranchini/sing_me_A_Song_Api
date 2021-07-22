@@ -4,7 +4,7 @@ import connection from "../../src/database";
 export async function CreateRecommendation(){
     const data = {
         name: faker.name.title(),
-        link: "https://www.youtube.com/watch?v=oX7kvYrL6lQ"
+        link: "https://www.youtube.com/watch?v=P7jwLxkN8gI"
     }
 
     const result = await connection.query(`
