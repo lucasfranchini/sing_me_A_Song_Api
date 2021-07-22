@@ -20,3 +20,7 @@ export async function saveRecommendationInDatabase(){
     `,[data.name,data.youtubeLink]);
     return res.rows[0];
 }
+
+export async function alterScore(value:number,id:number){
+    await connection.query("UPDATE recommendations SET score = $1 WHERE id=$2",[value,id])
+  }

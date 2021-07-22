@@ -2,7 +2,7 @@ import "../../src/setup";
 import supertest from "supertest";
 import app from "../../src/app";
 import { clearDatabase, closeConnection } from "../utils/database";
-import { generateRecommendation, saveRecommendationInDatabase } from "../factories/recommendationsFactory";
+import { alterScore, generateRecommendation, saveRecommendationInDatabase } from "../factories/recommendationsFactory";
 import connection from "../../src/database";
 
 const agent = supertest(app);
@@ -52,9 +52,7 @@ describe('POST /recommendations/:id/upvote', () =>{
 })
 
 describe('POST /recommendations/:id/downvote', () =>{
-  async function alterScore(){
-    await connection.query("UPDATE recommendations SET score = -5")
-  }
+  
   beforeEach(saveRecommendationInDatabase)
   it('returns status 404 for invalid id', async ()=>{
     const res = await agent.post('/recommendations/3/downvote');
@@ -70,7 +68,7 @@ describe('POST /recommendations/:id/downvote', () =>{
     expect(res.rows[0].score).toEqual(-1)
   })
   it('removes a recommendations when score is less than -5', async ()=>{
-    await alterScore();
+    await alterScore(-5,1);
     await agent.post('/recommendations/1/downvote');
     const res =  await connection.query('SELECT score FROM recommendations');
     expect(res.rowCount).toEqual(0);
@@ -92,4 +90,34 @@ describe('GET /recommendations/random', ()=>{
     const res = await agent.get('/recommendations/random')
     expect(res.body).toEqual(body)
   })
-})
+});
+
+describe('GET /recommendations/top/:amount',()=>{
+  it('returns status 500 for invalid amount',async ()=>{
+    const res = await agent.get('/recommendations/top/GG');
+    expect(res.status).toEqual(500);
+  })
+  it('returns status 400 for amount less than 0',async ()=>{
+    const res = await agent.get('/recommendations/top/-3');
+    expect(res.status).toEqual(400);
+  })
+  it('returns status 200 for valid amount',async ()=>{
+    await saveRecommendationInDatabase()
+    const res = await agent.get('/recommendations/top/3');
+    expect(res.status).toEqual(200);
+  })
+  it('returns right array order for valid amount',async ()=>{
+    await saveRecommendationInDatabase();
+    await saveRecommendationInDatabase();
+    await alterScore(5,2);
+    const res = await agent.get('/recommendations/top/3');
+    expect(res.body[0].score).toEqual(5);
+  })
+
+  it('returns right amount order for valid amount',async ()=>{
+    await saveRecommendationInDatabase();
+    await saveRecommendationInDatabase();
+    const res = await agent.get('/recommendations/top/1');
+    expect(res.body.length).toEqual(1);
+  })
+});
