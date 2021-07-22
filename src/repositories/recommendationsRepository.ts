@@ -35,3 +35,10 @@ export async function changeScore(id:number,score:number){
     WHERE id=$2
     `,[score,id]);
 }
+
+export async function removeRecommendationById(id:number){
+    await connection.query(`
+    DELETE FROM recommendations
+    WHERE id=$1
+    `,[id]);
+}

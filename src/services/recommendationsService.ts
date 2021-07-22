@@ -12,11 +12,12 @@ export async function changeScore(id:number,type:string):Promise<boolean>{
     if(!recommendation) return false;
     if(type==='up'){
         recommendation.score++;
-        recommendationsRepository.changeScore(id,recommendation.score)
+        await recommendationsRepository.changeScore(id,recommendation.score)
     }
     else if(type==='down'){
         recommendation.score--;
-        //if(recommendation.score<-5)
+        if(recommendation.score<-5) await recommendationsRepository.removeRecommendationById(id);
+        else await recommendationsRepository.changeScore(id,recommendation.score)
     }
     return true;
 }
