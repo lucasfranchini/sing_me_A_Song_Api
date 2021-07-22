@@ -22,7 +22,7 @@ export async function changeScore(id:number,type:string):Promise<boolean>{
     return true;
 }
 
-export async function randomRecommendation(){
+export async function randomRecommendation():Promise<{id:number;name:string;youtubeLink:string;score:number}>{
     let result:{id:number;name:string;youtubeLink:string;score:number}[];
 
     if(Math.random() < 0.7) result = await recommendationsRepository.listRecommendationsByScore('>');
@@ -33,4 +33,9 @@ export async function randomRecommendation(){
 
     const random = Math.floor(Math.random()*result.length);
     return result[random];
+}
+
+export async function topRecommendations( amount:number):Promise<{id:number;name:string;youtubeLink:string;score:number}[]>{
+    const result = await recommendationsRepository.listLimitedRecommendations(amount);
+    return result;
 }

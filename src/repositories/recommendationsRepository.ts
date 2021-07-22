@@ -50,7 +50,18 @@ export async function listAllRecommendations():Promise<{id:number;name:string;yo
     const result = await connection.query(`
     SELECT * 
     FROM recommendations
+    ORDER BY score DESC
     `);
+    return result.rows;
+}
+
+export async function listLimitedRecommendations(amount:number):Promise<{id:number;name:string;youtubeLink:string;score:number}[]>{
+    const result = await connection.query(`
+    SELECT * 
+    FROM recommendations
+    ORDER BY score DESC
+    LIMIT $1
+    `,[amount]);
     return result.rows;
 }
 

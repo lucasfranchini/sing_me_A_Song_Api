@@ -10,5 +10,6 @@ app.post("/recommendations", recommendationsController.addMusic);
 app.post("/recommendations/:id/upvote", recommendationsController.addScore);
 app.post("/recommendations/:id/downvote", recommendationsController.subtractScore);
 app.get("/recommendations/random",recommendationsController.randomRecommendation);
+app.get("/recommendations/top/:amount",recommendationsController.topRecommendations);
 
 export default app;
