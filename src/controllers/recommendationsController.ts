@@ -1,15 +1,25 @@
 import {Request,Response} from "express";
+import * as recommendationsService from "../services/recommendationsService";
 
 export async function addMusic(req:Request,res:Response){
-    const {name,youtubeLink} = req.body
-    if(!name || validateYouTubeUrl(youtubeLink)) return res.sendStatus(400)
+    try{
+        const {name,youtubeLink} = req.body;
+        if(!name || !validateYouTubeUrl(youtubeLink)) return res.sendStatus(400)
+        const result = await recommendationsService.addMusic(name,youtubeLink);
+        if(!result) return res.sendStatus(409)
+        res.sendStatus(201)
+    }
+    catch(e){
+        console.log(e)
+        res.sendStatus(500)
+    }
 }
 
 function validateYouTubeUrl(url:string)
 {
-    var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
-    var match = url.match(regExp);
-    if (match && match[2].length == 11) {
+    const regExp = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
+    const test = regExp.test(url);
+    if (test ) {
         return true;
     }
     else {
