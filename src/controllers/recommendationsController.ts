@@ -19,7 +19,7 @@ export async function addScore(req:Request,res:Response){
     try{
         const id = Number(req.params.id);
         const result = await recommendationsService.changeScore(id,"up")
-        if(result===null) return res.sendStatus(404);
+        if(!result) return res.sendStatus(404);
         res.sendStatus(200)
     }
     catch(e){
