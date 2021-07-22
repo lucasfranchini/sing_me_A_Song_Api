@@ -11,10 +11,12 @@ export function generateRecommendation( name:string, link:string ){
 
 export async function saveRecommendationInDatabase(){
     const data = generateRecommendation('','');
-    await connection.query(`
+    const res = await connection.query(`
     INSERT 
     INTO recommendations 
     (name,"youtubeLink") 
     VALUES ($1,$2)
+    RETURNING *
     `,[data.name,data.youtubeLink]);
+    return res.rows[0];
 }

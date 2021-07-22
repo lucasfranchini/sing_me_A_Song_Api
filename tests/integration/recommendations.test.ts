@@ -34,7 +34,7 @@ describe("POST /recommendations", () => {
   })
 });
 
-describe('POST recommendations/:id/upvote', () =>{
+describe('POST /recommendations/:id/upvote', () =>{
   beforeEach(saveRecommendationInDatabase)
   it('returns status 404 for invalid id', async ()=>{
     const res = await agent.post('/recommendations/3/upvote');
@@ -51,7 +51,7 @@ describe('POST recommendations/:id/upvote', () =>{
   })
 })
 
-describe('POST recommendations/:id/downvote', () =>{
+describe('POST /recommendations/:id/downvote', () =>{
   async function alterScore(){
     await connection.query("UPDATE recommendations SET score = -5")
   }
@@ -74,5 +74,22 @@ describe('POST recommendations/:id/downvote', () =>{
     await agent.post('/recommendations/1/downvote');
     const res =  await connection.query('SELECT score FROM recommendations');
     expect(res.rowCount).toEqual(0);
+  })
+})
+
+describe('GET /recommendations/random', ()=>{
+  it('returns status 404 for empty database', async ()=>{
+    const res = await agent.get('/recommendations/random')
+    expect(res.status).toEqual(404)
+  })
+  it('returns status 200 for valid get', async ()=>{
+    const body = await saveRecommendationInDatabase();
+    const res = await agent.get('/recommendations/random')
+    expect(res.status).toEqual(200)
+  })
+  it('returns a object for valid get', async ()=>{
+    const body = await saveRecommendationInDatabase();
+    const res = await agent.get('/recommendations/random')
+    expect(res.body).toEqual(body)
   })
 })
